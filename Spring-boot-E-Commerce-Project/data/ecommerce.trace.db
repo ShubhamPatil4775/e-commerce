@@ -1,0 +1,6 @@
+2025-07-17 11:29:27 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ORDERS[*]"; SQL statement:
+ORDERS [42000-200]
+2025-07-17 13:30:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "PRODUCT_ID[*]"; expected "PREPARE"; SQL statement:
+PRODUCT_ID [42001-200]
