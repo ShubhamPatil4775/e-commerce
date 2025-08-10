@@ -18,6 +18,7 @@ jobs:
      run: |
        mvn --batch-mode --update-snapshots verify
        mkdir staging && cp target/*.jar staging
+     working-directory: ./e-commerce/Spring-boot-E-Commerce-Project/
    - name: Upload a Build Artifact
      uses: actions/upload-artifact@v4.6.2
      with:
