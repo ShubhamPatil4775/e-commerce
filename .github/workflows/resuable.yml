@@ -5,6 +5,6 @@ on:
 
 jobs:
   call-maven-pipeline:
-    uses: ./.github/workflows/multistage.yml
+    uses: ./.github/workflows/main.yml
     with:
       project_directory: "Spring-boot-E-Commerce-Project"
