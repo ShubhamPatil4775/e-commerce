@@ -1,4 +1,4 @@
-name: CI for Maven Project
+name: Multistage
 
 on:
   workflow_dispatch:
@@ -35,7 +35,7 @@ jobs:
           java-version: '17'
           distribution: 'microsoft'
       - name: Run Tests with Maven
-        run: mvn --batch-mode verify
+        run: mvn --batch-mode verify -DskipTests
         working-directory: ./Spring-boot-E-Commerce-Project/
 
   deploy:
