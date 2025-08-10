@@ -1,0 +1,10 @@
+name: resuable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-maven-pipeline:
+    uses: ./.github/workflows/multistage.yml
+    with:
+      project_directory: "Spring-boot-E-Commerce-Project"
