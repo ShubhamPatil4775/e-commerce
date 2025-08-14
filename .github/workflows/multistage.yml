@@ -1,0 +1,50 @@
+name: Multistage
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.14.1
+        with:
+          java-version: '17'
+          distribution: 'microsoft'
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots package -DskipTests
+        working-directory: ./Spring-boot-E-Commerce-Project/
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: Package
+          path: ./Spring-boot-E-Commerce-Project/target/*.jar
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.14.1
+        with:
+          java-version: '17'
+          distribution: 'microsoft'
+      - name: Run Tests with Maven
+        run: mvn --batch-mode verify -DskipTests
+        working-directory: ./Spring-boot-E-Commerce-Project/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: Package
+      - name: Deploy to Server
+        run: echo "Deployment step goes here..."

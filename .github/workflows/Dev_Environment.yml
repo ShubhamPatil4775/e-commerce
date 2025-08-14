@@ -1,0 +1,34 @@
+name: Dev_Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      TARGET_ENVIRONMENT:
+        type: environment
+        default: dev
+
+jobs:
+  CI_Non-conterization_build:
+    runs-on: ubuntu-latest
+    environment: ${{inputs.TARGET_ENVIRONMENT}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.0
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.14.1
+        with:
+          java-version: '17'
+          distribution: 'microsoft'
+      - name: Build using Maven
+        run: mvn --batch-mode --update-snapshots package -DskipTests
+        working-directory: ./Spring-boot-E-Commerce-Project/
+      - name: Create staging directory and copy JAR
+        run: mkdir staging && cp target/*.jar staging
+        working-directory: ./Spring-boot-E-Commerce-Project/
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: Package
+          path: staging
+      - name: Echo Variable
+        run: echo "vars is ${{vars.variable}}"
