@@ -14,7 +14,7 @@ import java.util.List;
 @SpringBootApplication
 @EnableFeignClients(basePackages = "com.usk.ecommerce.feignClinet")
 @EnableEurekaClient
-public class ECommerceApplication implements CommandLineRunner {
+public class ECommerceApplication  {
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -22,9 +22,9 @@ public class ECommerceApplication implements CommandLineRunner {
 		SpringApplication.run(ECommerceApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		List<Product> products= Product.storeProducts();
-		productRepository.saveAll(products);
-	}
+//	@Override
+//	public void run(String... args) throws Exception {
+//		List<Product> products= Product.storeProducts();
+//		productRepository.saveAll(products);
+//	}
 }
