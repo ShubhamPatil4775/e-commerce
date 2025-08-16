@@ -2,6 +2,8 @@ package com.usk.ecommerce.serviceimpl;
 
 import com.usk.ecommerce.dto.*;
 import com.usk.ecommerce.entity.*;
+import com.usk.ecommerce.exception.AccountNumberRequiredException;
+import com.usk.ecommerce.exception.UserNotFoundException;
 import com.usk.ecommerce.repository.CartRepository;
 import com.usk.ecommerce.repository.OrderItemRepository;
 import com.usk.ecommerce.repository.OrderRepository;
@@ -34,10 +36,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse placeOrder(Long userId, PlaceOrderRequest request) {
         User user= userRepository.findById(userId).orElseThrow(()->
-                new RuntimeException("user not found with id"));
+                new UserNotFoundException("user not found with id"));
         String accountNo = request.getAccountNo();
         if (accountNo ==null || accountNo.isEmpty()){
-            throw new RuntimeException("Account no is required to place an order");
+            throw new AccountNumberRequiredException("Account no is required to place an order");
         }
         CartResponse cartDetails= cartService.getCartDetails(userId);
         if (cartDetails.getItems().isEmpty()){
@@ -85,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getOrderByUserId(Long userId) {
         User user= userRepository.findById(userId).orElseThrow(()->
-                new RuntimeException("user not found with id"));
+                new UserNotFoundException("user not found with id"));
         List<Order> orders = orderRepository.findByUser(user);
         return orders.stream()
                 .map(this::mapToOrderResponse)
@@ -95,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse getOrderById(Long userId, Long orderId) {
         User user= userRepository.findById(userId).orElseThrow(()->
-                new RuntimeException("user not found with id"));
+                new UserNotFoundException("user not found with id"));
         Order order = orderRepository.findByIdAndUser(orderId,user).orElseThrow(()->
                 new RuntimeException("Order does not or does not belong to user "));
         return mapToOrderResponse(order);

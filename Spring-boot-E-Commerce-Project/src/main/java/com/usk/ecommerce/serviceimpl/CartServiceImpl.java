@@ -7,6 +7,9 @@ import com.usk.ecommerce.entity.Cart;
 import com.usk.ecommerce.entity.CartItem;
 import com.usk.ecommerce.entity.Product;
 import com.usk.ecommerce.entity.User;
+import com.usk.ecommerce.exception.CartItemNotFoundException;
+import com.usk.ecommerce.exception.ProductNotFoundException;
+import com.usk.ecommerce.exception.UserNotFoundException;
 import com.usk.ecommerce.repository.CartItemRepository;
 import com.usk.ecommerce.repository.CartRepository;
 import com.usk.ecommerce.repository.ProductRepository;
@@ -34,7 +37,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart getOrCreateCart(Long userId) {
         User user = userRepository.findById(userId).
-                orElseThrow(() ->new RuntimeException("user not exception"));
+                orElseThrow(() ->new UserNotFoundException("user not with ID: "+userId));
 
         return cartRepository.findByUserId(userId)
                 .orElseGet(()->
@@ -49,7 +52,7 @@ public class CartServiceImpl implements CartService {
     public CartItem addProductToCart(Long userId, AddToCartRequest request) {
         Cart cart = getOrCreateCart(userId);
         Product product = productRepository.findById(request.getProductId()).orElseThrow(()->
-                new RuntimeException("Product not found with ID"));
+                new ProductNotFoundException("Product not found with ID"));
         Optional<CartItem> existingCartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(),request.getProductId());
         CartItem cartItem;
         if (existingCartItem.isPresent()){
@@ -88,7 +91,7 @@ public class CartServiceImpl implements CartService {
         }
         Cart cart = getOrCreateCart(userId);
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(()->
-                new RuntimeException("Cart item not found with ID"));
+                new CartItemNotFoundException("Cart item not found with ID"));
         cartItem.setQuantity(quantity);
         return cartItemRepository.save(cartItem);
     }
@@ -97,7 +100,7 @@ public class CartServiceImpl implements CartService {
     public void removeProductFromCart(Long userId, Long cartItemId) {
         Cart cart = getOrCreateCart(userId);
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(()->
-                new RuntimeException("Cart item not found with ID")
+                new CartItemNotFoundException("Cart item not found with ID")
         );
 
         if(!cartItem.getCart().getId().equals(cart.getId())){
